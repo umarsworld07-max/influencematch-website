@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>InfluenceMatch — The matching service for premium travel sponsorships.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=Plus+Jakarta+Sans:wght@600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --ink: #1A1A1A;
+    --mid: #4B5563;
+    --muted: #9CA3AF;
+    --amber: #D55A2C;
+    --amber-deep: #B84A22;
+    --cream: #FFF4E8;
+    --cream-deep: #f4ead9;
+    --wood: #1a1410;
+    --border: rgba(213, 90, 44, 0.16);
+    --border-strong: rgba(213, 90, 44, 0.28);
+    --serif: 'Instrument Serif', 'Times New Roman', serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --display: 'Plus Jakarta Sans', sans-serif;
+    --display-h: var(--serif);
+
+    /* TWEAKABLES (live-set via inline style on :root) */
+    --type-scale: 1;
+    --heading-weight: 400;
+    --section-pad: 140px;
+    --card-radius: 4px;
+    --btn-radius: 4px;
+    --container-w: 1160px;
+    --hero-vignette: 0.55;
+    --hero-scrim: 0.94;
+    --parallax: 1;
+    --reveal-distance: 28px;
+    --reveal-duration: 900ms;
+    --hover-lift: 2px;
+    --grain: 0;
+  }
+
+  /* ──────── MOOD ──────── */
+  html[data-mood="coastal"] {
+    --bg: #F5F2EC;
+    --amber: #1F6B7A;
+    --amber-deep: #154a55;
+    --cream: #E8EFEF;
+    --cream-deep: #d4e1e1;
+    --wood: #0e1f24;
+    --border: rgba(31, 107, 122, 0.18);
+    --border-strong: rgba(31, 107, 122, 0.32);
+  }
+  html[data-mood="forest"] {
+    --bg: #F4F1E8;
+    --amber: #5B6B2E;
+    --amber-deep: #3f4a1f;
+    --cream: #ECE7D2;
+    --cream-deep: #ddd5b8;
+    --wood: #1a1f10;
+    --border: rgba(91, 107, 46, 0.20);
+    --border-strong: rgba(91, 107, 46, 0.34);
+  }
+
+  /* ──────── VOICE ──────── */
+  /* Editorial = default (serif display + italic accents in amber). */
+  html[data-voice="modern"] {
+    --display-h: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+  html[data-voice="modern"] h1,
+  html[data-voice="modern"] h2,
+  html[data-voice="modern"] h3,
+  html[data-voice="modern"] h4,
+  html[data-voice="modern"] .faq-q {
+    font-family: var(--display-h) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.025em !important;
+    font-style: normal !important;
+  }
+  html[data-voice="modern"] em {
+    font-style: normal;
+    color: var(--amber);
+    font-weight: 700;
+  }
+  html[data-voice="manuscript"] body,
+  html[data-voice="manuscript"] .hero p,
+  html[data-voice="manuscript"] .section-head p,
+  html[data-voice="manuscript"] .card p,
+  html[data-voice="manuscript"] .step p,
+  html[data-voice="manuscript"] .faq-a,
+  html[data-voice="manuscript"] .creators p {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.55;
+  }
+  html[data-voice="manuscript"] .card p,
+  html[data-voice="manuscript"] .step p { font-size: 17px; }
+  html[data-voice="manuscript"] .eyebrow {
+    font-family: var(--serif);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--amber);
+  }
+
+  /* ──────── ATMOSPHERE ──────── */
+  /* Cinematic: deep parallax, heavy bleed, video lingers. */
+  html[data-atmosphere="cinematic"] .hero { min-height: 100vh; height: 110vh; }
+  html[data-atmosphere="cinematic"] .work-bleed { height: 360px; opacity: 1.2; }
+  html[data-atmosphere="cinematic"] .section-work {
+    background: linear-gradient(180deg, var(--cream-deep) 0%, var(--cream) 24%, var(--bg) 100%);
+  }
+  html[data-atmosphere="cinematic"] .section { padding: 180px 0; }
+  html[data-atmosphere="cinematic"] .reveal,
+  html[data-atmosphere="cinematic"] .reveal-stagger > * {
+    transition-duration: 1300ms;
+    transform: translateY(48px);
+  }
+
+  /* Flat: print-magazine. No parallax, no bleed, hard transitions. */
+  html[data-atmosphere="flat"] .work-bleed { display: none; }
+  html[data-atmosphere="flat"] .hero::after { background: none !important; }
+  html[data-atmosphere="flat"] .section-work {
+    background: var(--bg) !important;
+    border-top: 1px solid var(--border-strong);
+  }
+  html[data-atmosphere="flat"] .section-work .card {
+    backdrop-filter: none;
+    background: var(--cream) !important;
+    box-shadow: none;
+  }
+  html[data-atmosphere="flat"] .reveal,
+  html[data-atmosphere="flat"] .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  html[data-atmosphere="flat"] .hero-content {
+    transform: none !important;
+  }
+  html[data-atmosphere="flat"] .hero video { transform: none !important; }
+  html[data-atmosphere="flat"] .hero-inner > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Apply display-h variable to headings */
+  .hero h1, .section-head h2, .card h3, .step h4,
+  .about-grid h2, .contact-head h2,
+  .modal h3, .success-state h3, .faq-q {
+    font-family: var(--display-h);
+    font-weight: var(--heading-weight);
+  }
+
+  /* ──────── TYPE SCALE (multiplier on all display sizes) ──────── */
+  .hero h1 { font-size: calc(clamp(38px, 4.2vw, 62px) * var(--type-scale)); }
+  .section-head h2 { font-size: calc(clamp(34px, 3.4vw, 50px) * var(--type-scale)); }
+  .card h3 { font-size: calc(26px * var(--type-scale)); }
+  .step h4 { font-size: calc(26px * var(--type-scale)); }
+  .about-grid h2 { font-size: calc(clamp(32px, 3vw, 44px) * var(--type-scale)); }
+  .contact-head h2 { font-size: calc(clamp(36px, 3.4vw, 52px) * var(--type-scale)); }
+  .faq-q { font-size: calc(28px * var(--type-scale)); }
+
+  /* ──────── RADIUS ──────── */
+  .btn, .nav-cta, .hero-cta, .nav-entry, .creators-link,
+  .lang-switch, .role-tabs, .field input, .field textarea,
+  .success-state, .faq-item, .modal { /* leave inputs at 0 below */ }
+
+  .btn, .nav-cta, .hero-cta, .nav-entry, .creators-link,
+  .lang-switch { border-radius: var(--btn-radius); }
+  .card, .role-tabs, .footer-socials a, .success-state {
+    border-radius: var(--card-radius);
+  }
+
+  /* ──────── REVEAL TUNING (live-set) ──────── */
+  .reveal { transform: translateY(var(--reveal-distance)); transition-duration: var(--reveal-duration); }
+  .reveal-stagger > * { transform: translateY(var(--reveal-distance)); transition-duration: var(--reveal-duration); }
+
+  /* ──────── HOVER LIFT ──────── */
+  .card:hover { transform: translateY(calc(-1 * var(--hover-lift))); }
+
+  /* ──────── HERO TUNING ──────── */
+  .hero-inner::before {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(250, 250, 247, var(--hero-scrim)) 0%,
+      rgba(255, 244, 232, calc(var(--hero-scrim) * 0.92)) 42%,
+      rgba(255, 244, 232, calc(var(--hero-scrim) * 0.32)) 78%,
+      rgba(255, 244, 232, 0) 100%
+    );
+  }
+
+  /* ──────── DARK MODE ──────── */
+  html[data-theme="dark"] {
+    --bg: #14110d;
+    --ink: #f3ede2;
+    --mid: #b9b1a4;
+    --muted: #6f6960;
+    --cream: #1f1a14;
+    --cream-deep: #14110d;
+    --border: rgba(213, 90, 44, 0.30);
+    --border-strong: rgba(213, 90, 44, 0.55);
+  }
+  html[data-theme="dark"] body { background: var(--bg); color: var(--ink); }
+  html[data-theme="dark"] .hero-inner::before {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(20, 17, 13, var(--hero-scrim)) 0%,
+      rgba(31, 26, 20, calc(var(--hero-scrim) * 0.92)) 42%,
+      rgba(31, 26, 20, calc(var(--hero-scrim) * 0.32)) 78%,
+      rgba(31, 26, 20, 0) 100%
+    );
+  }
+  html[data-theme="dark"] .hero h1 { color: var(--ink); }
+  html[data-theme="dark"] .hero p { color: var(--mid); }
+  html[data-theme="dark"] .hero-eyebrow { color: rgba(243, 237, 226, 0.55); }
+  html[data-theme="dark"] .section-work {
+    background: linear-gradient(180deg, var(--cream) 0%, var(--cream-deep) 28%, var(--bg) 100%);
+  }
+  html[data-theme="dark"] .work-bleed {
+    background: radial-gradient(ellipse 70% 100% at 50% 0%,
+      rgba(58, 38, 16, 0.7) 0%,
+      rgba(58, 38, 16, 0.3) 35%,
+      rgba(58, 38, 16, 0) 75%);
+  }
+  html[data-theme="dark"] .card { background: var(--cream); }
+  html[data-theme="dark"] .section-work .card { background: rgba(31, 26, 20, 0.7); }
+  html[data-theme="dark"] .role-tabs,
+  html[data-theme="dark"] .success-state { background: var(--cream); }
+  html[data-theme="dark"] .field input,
+  html[data-theme="dark"] .field textarea { color: var(--ink); border-bottom-color: rgba(243, 237, 226, 0.18); }
+  html[data-theme="dark"] .nav-cta { color: #14110d; }
+
+  /* ──────── HERO TREATMENTS ──────── */
+  /* Default: window-bright. */
+  html[data-hero="duotone"] .hero video {
+    filter: saturate(0.55) sepia(0.18) brightness(0.92);
+  }
+  html[data-hero="vintage"] .hero video {
+    filter: saturate(0.7) sepia(0.32) contrast(1.08) brightness(0.94);
+  }
+  html[data-hero="bw"] .hero video { filter: grayscale(1) contrast(1.1); }
+  html[data-hero="vibrant"] .hero video { filter: saturate(1.4) contrast(1.06); }
+  html[data-hero="frost"] .hero video { filter: blur(2px) brightness(0.95); }
+
+  /* Hero vignette (variable-driven) */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse at center,
+        transparent 30%,
+        rgba(0, 0, 0, var(--hero-vignette)) 110%);
+  }
+
+  /* ──────── ACCENT FILL STYLES ──────── */
+  /* default = solid amber. data-accent="outline" = transparent w/ amber border. */
+  html[data-accent="outline"] .btn,
+  html[data-accent="outline"] .nav-cta,
+  html[data-accent="outline"] .hero-cta {
+    background: transparent !important;
+    color: var(--amber) !important;
+    border: 1px solid var(--amber) !important;
+  }
+  html[data-accent="outline"] .btn:hover,
+  html[data-accent="outline"] .nav-cta:hover,
+  html[data-accent="outline"] .hero-cta:hover {
+    background: var(--amber) !important;
+    color: var(--cream) !important;
+  }
+  html[data-accent="gradient"] .btn,
+  html[data-accent="gradient"] .nav-cta,
+  html[data-accent="gradient"] .hero-cta {
+    background: linear-gradient(135deg, var(--amber) 0%, var(--amber-deep) 100%) !important;
+  }
+  html[data-accent="muted"] .btn,
+  html[data-accent="muted"] .nav-cta,
+  html[data-accent="muted"] .hero-cta {
+    background: color-mix(in oklab, var(--amber) 35%, var(--bg)) !important;
+    color: var(--amber-deep) !important;
+  }
+  html[data-accent="muted"] .btn:hover,
+  html[data-accent="muted"] .nav-cta:hover,
+  html[data-accent="muted"] .hero-cta:hover {
+    background: var(--amber) !important;
+    color: var(--cream) !important;
+  }
+
+  /* ──────── CARD STYLE ──────── */
+  html[data-cards="bordered"] .card {
+    background: transparent !important;
+    border: 1px solid var(--border-strong) !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  html[data-cards="filled"] .card {
+    background: var(--cream) !important;
+    border-color: transparent !important;
+  }
+  html[data-cards="elevated"] .card {
+    border-color: transparent !important;
+    box-shadow: 0 8px 24px -8px rgba(74, 45, 20, 0.18),
+                0 2px 8px rgba(74, 45, 20, 0.06) !important;
+  }
+
+  /* ──────── DIVIDER STYLE ──────── */
+  html[data-divider="rule"] section + section,
+  html[data-divider="rule"] section.section + section.section {
+    border-top: 1px solid var(--border-strong);
+  }
+  html[data-divider="ornament"] section.section::before {
+    content: "❋";
+    display: block;
+    text-align: center;
+    color: var(--amber);
+    font-family: var(--serif);
+    font-size: 22px;
+    padding-top: 0;
+    margin-top: -56px;
+    margin-bottom: 32px;
+    opacity: 0.6;
+  }
+
+  /* ──────── LINK UNDERLINE STYLE ──────── */
+  html[data-links="dotted"] .nav-links a:not(.nav-cta):not(.nav-entry):hover {
+    text-decoration: underline dotted;
+    text-underline-offset: 4px;
+  }
+  html[data-links="solid"] .nav-links a:not(.nav-cta):not(.nav-entry):hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* ──────── GRAIN OVERLAY ──────── */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: var(--grain);
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ──────── COMPACT DENSITY ──────── */
+  html[data-density="compact"] .section { padding: calc(var(--section-pad) * 0.65) 0; }
+  html[data-density="compact"] .section-head { margin-bottom: 48px; }
+  html[data-density="compact"] .card { padding: 28px 26px 32px; min-height: auto; }
+  html[data-density="compact"] .step { padding: 28px 24px 36px 0; }
+  html[data-density="compact"] .step:not(:first-child) { padding-left: 24px; }
+  html[data-density="compact"] .faq-item { padding: 28px 0; }
+  html[data-density="airy"] .section { padding: calc(var(--section-pad) * 1.35) 0; }
+  html[data-density="airy"] .section-head { margin-bottom: 100px; }
+  html[data-density="airy"] .card { padding: 56px 46px 60px; min-height: 380px; }
+  html[data-density="airy"] .faq-item { padding: 60px 0; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+  .eyebrow {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .container {
+    max-width: var(--container-w);
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: var(--amber);
+    color: #FFF4E8;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    border-radius: 4px;
+    transition: background 200ms ease, transform 200ms ease;
+  }
+  .btn:hover { background: #B84A22; }
+  .btn .arrow { transition: transform 220ms ease; }
+  .btn:hover .arrow { transform: translateX(4px); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid rgba(255, 244, 232, 0.32);
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 200ms ease, border-color 200ms ease;
+  }
+  .btn-ghost:hover { background: rgba(255, 244, 232, 0.08); border-color: rgba(255, 244, 232, 0.55); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 720px;
+    width: 100%;
+    overflow: hidden;
+    background: #1a1410;
+  }
+
+  .hero video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  /* very subtle fade only at edges to let nav read on dark wood */
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 18%, rgba(0,0,0,0) 82%, rgba(0,0,0,0.20) 100%);
+    z-index: 1;
+  }
+
+  .hero-nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 3;
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .wordmark {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: -0.005em;
+    color: var(--cream);
+    line-height: 1;
+  }
+  .wordmark em { font-style: italic; }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: #FFF4E8;
+    opacity: 1;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+    transition: color 180ms ease;
+  }
+  .nav-links a:hover { color: var(--amber); }
+  .nav-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 244, 232, 0.28);
+  }
+  .nav-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid rgba(255, 244, 232, 0.42);
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #FFF4E8 !important;
+    background: rgba(0,0,0,0.18);
+    backdrop-filter: blur(4px);
+    transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+    text-shadow: none !important;
+  }
+  .nav-entry:hover {
+    background: rgba(255, 244, 232, 0.12);
+    border-color: rgba(255, 244, 232, 0.7);
+    color: #FFF4E8 !important;
+  }
+  .nav-entry .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--amber);
+  }
+
+  .nav-cta {
+    padding: 10px 18px;
+    background: var(--amber);
+    color: #FFF4E8;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.18);
+    transition: background 200ms ease;
+  }
+  .nav-cta:hover { background: #B84A22; }
+
+  /* The hero text sits inside the bright "window canvas" of the video.
+     The window is dead-center in the train frame — we constrain the text
+     column to roughly the window's bright area. */
+  .hero-content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+  }
+
+  .hero-inner {
+    position: relative;
+    width: min(620px, 52vw);
+    text-align: center;
+    color: var(--ink);
+    padding: 64px 56px 60px;
+    isolation: isolate;
+  }
+  /* Soft cream scrim behind the hero text — radial so it dissolves into
+     the surrounding video. Sits behind the text only. */
+  .hero-inner::before {
+    content: "";
+    position: absolute;
+    inset: -10px -20px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(250, 250, 247, 0.94) 0%,
+      rgba(255, 244, 232, 0.86) 42%,
+      rgba(255, 244, 232, 0.30) 78%,
+      rgba(255, 244, 232, 0) 100%
+    );
+    z-index: -1;
+    border-radius: 4px;
+  }
+
+  .hero-eyebrow {
+    color: rgba(26, 26, 26, 0.55);
+    margin-bottom: 28px;
+  }
+  .eyebrow-travel {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--amber);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 14px;
+    position: relative;
+    top: 1px;
+    margin-left: 2px;
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(38px, 4.2vw, 62px);
+    line-height: 1.04;
+    letter-spacing: -0.012em;
+    color: #1A1A1A;
+    margin-bottom: 26px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  .hero p {
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: #2a2622;
+    max-width: 480px;
+    margin: 0 auto 36px;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: var(--amber);
+    color: var(--cream);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: background 200ms ease;
+  }
+  .hero-cta:hover { background: #B84A22; }
+  .hero-cta .arrow { transition: transform 220ms ease; }
+  .hero-cta:hover .arrow { transform: translateX(4px); }
+
+  /* ---------- Section scaffolding ---------- */
+  section { scroll-margin-top: 40px; }
+
+  .section {
+    padding: var(--section-pad) 0;
+  }
+  .section-sm { padding: 110px 0; }
+
+  .section-head {
+    margin-bottom: 72px;
+    max-width: 720px;
+  }
+  .section-head .eyebrow { display: block; margin-bottom: 18px; }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(34px, 3.4vw, 50px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .section-head h2 em { font-style: italic; color: var(--amber); }
+  .section-head p {
+    margin-top: 18px;
+    color: var(--mid);
+    font-size: 15.5px;
+    line-height: 1.65;
+    max-width: 560px;
+  }
+
+  /* ---------- What we do ---------- */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 40px 36px 44px;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+    transition: border-color 220ms ease, transform 220ms ease;
+  }
+  .card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+  }
+  .card-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--amber);
+    margin-bottom: 36px;
+  }
+  .card h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    margin-bottom: 18px;
+    text-wrap: balance;
+  }
+  .card h3 em { font-style: italic; color: var(--amber); }
+  .card p {
+    color: var(--mid);
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  .card-rule {
+    width: 28px;
+    height: 1px;
+    background: var(--border-strong);
+    margin-bottom: 28px;
+  }
+
+  /* ---------- What we do (blends into hero) ---------- */
+  .section-work {
+    position: relative;
+    background: linear-gradient(
+      180deg,
+      #f4ead9 0%,
+      #faf2e3 28%,
+      #FAFAF7 100%
+    );
+    overflow: hidden;
+  }
+  /* a soft warm wash at the very top echoes the window light spilling
+     down from the hero, so the seam between sections dissolves. */
+  .work-bleed {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 220px;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        ellipse 70% 100% at 50% 0%,
+        rgba(255, 244, 232, 0.95) 0%,
+        rgba(255, 244, 232, 0.55) 35%,
+        rgba(255, 244, 232, 0) 75%
+      );
+    z-index: 0;
+  }
+  .section-work .container { position: relative; z-index: 1; }
+
+  /* Hero bottom: gentle dark fade so the wood sinks into the warm
+     section below instead of cutting hard. */
+  .hero::after {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 18%, rgba(0,0,0,0) 70%, rgba(26, 20, 16, 0.55) 92%, rgba(244, 234, 217, 0.55) 100%);
+  }
+
+  /* Soften card background so it reads as part of the wash, not a chip
+     on top of it. */
+  .section-work .card {
+    background: rgba(255, 244, 232, 0.62);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(213, 90, 44, 0.14);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 24px 48px -32px rgba(74, 45, 20, 0.18);
+  }
+  .section-work .card:hover {
+    background: rgba(255, 244, 232, 0.85);
+    border-color: rgba(213, 90, 44, 0.26);
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+  .step {
+    padding: 44px 28px 56px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 44px;
+    bottom: 56px;
+    right: 0;
+    width: 1px;
+    background: var(--border);
+  }
+  .step:not(:first-child) { padding-left: 28px; }
+
+  .step-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--amber);
+    letter-spacing: 0.04em;
+    margin-bottom: 28px;
+    display: block;
+  }
+  .step h4 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .step p {
+    color: var(--mid);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  /* ---------- About ---------- */
+  .about {
+    background: var(--cream);
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-grid .eyebrow { color: var(--amber); opacity: 0.85; }
+  .about-grid h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(32px, 3vw, 44px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-top: 18px;
+  }
+  .about-grid h2 em { font-style: italic; color: var(--amber); }
+  .about-body p {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+  .about-body p + p { margin-top: 22px; }
+  .about-meta {
+    margin-top: 40px;
+    display: flex;
+    gap: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .about-meta div .eyebrow { color: var(--muted); display: block; margin-bottom: 8px; }
+  .about-meta div span { font-size: 14px; color: var(--ink); }
+
+  /* ---------- For creators ---------- */
+  .creators {
+    padding: 96px 0;
+    border-top: 1px solid var(--border);
+  }
+  .creators-inner {
+    display: grid;
+    grid-template-columns: 240px 1fr auto;
+    gap: 60px;
+    align-items: center;
+  }
+  .creators .eyebrow { color: var(--muted); }
+  .creators p {
+    color: var(--mid);
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 620px;
+  }
+  .creators-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border: 1px solid var(--amber);
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13.5px;
+    color: var(--amber);
+    background: transparent;
+    transition: background 200ms ease, color 200ms ease;
+    white-space: nowrap;
+  }
+  .creators-link .arrow { transition: transform 220ms ease; }
+  .creators-link:hover { background: var(--amber); color: var(--cream); }
+  .creators-link:hover .arrow { transform: translateX(4px); }
+
+  /* ---------- FAQ ---------- */
+  .faq {
+    background: var(--bg);
+  }
+  .faq-list {
+    max-width: 820px;
+  }
+  .faq-item {
+    padding: 44px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-item:first-child { border-top: 1px solid var(--border); }
+  .faq-q {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .faq-a {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--mid);
+    max-width: 680px;
+  }
+
+  /* ---------- Contact ---------- */
+  .contact {
+    background: var(--cream);
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .contact-head h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 3.4vw, 52px);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    margin-top: 18px;
+  }
+  .contact-head h2 em { font-style: italic; color: var(--amber); }
+  .contact-head .eyebrow { color: var(--amber); opacity: 0.85; }
+  .contact-meta {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .contact-meta div .eyebrow { color: var(--muted); display: block; margin-bottom: 6px; }
+  .contact-meta a { color: var(--ink); border-bottom: 1px solid var(--border); transition: border-color 200ms ease; }
+  .contact-meta a:hover { border-color: var(--amber); }
+
+  form.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field label {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .field input,
+  .field textarea {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.18);
+    padding: 10px 0 12px;
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 200ms ease;
+    resize: vertical;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder { color: var(--muted); }
+  .field input:focus,
+  .field textarea:focus { border-color: var(--amber); }
+  .field.error input,
+  .field.error textarea { border-color: var(--amber); }
+  .field-error {
+    font-size: 12px;
+    color: var(--amber);
+    min-height: 14px;
+  }
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .form-fallback {
+    font-size: 13.5px;
+    color: var(--mid);
+  }
+  .form-fallback a {
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1px;
+  }
+  .form-fallback a:hover { border-color: var(--amber); }
+
+  .success-state {
+    padding: 52px 44px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    text-align: left;
+  }
+  .success-state h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+  .success-state h3 em { font-style: italic; color: var(--amber); }
+  .success-state p {
+    color: var(--mid);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .hidden { display: none !important; }
+
+  /* ---------- Role tabs (in contact form) ---------- */
+  .role-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 36px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .role-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 18px 22px;
+    text-align: left;
+    transition: background 220ms ease, color 220ms ease;
+    position: relative;
+  }
+  .role-tab + .role-tab { border-left: 1px solid var(--border); }
+  .role-tab-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--muted);
+    transition: background 220ms ease, transform 220ms ease;
+    margin-bottom: 6px;
+  }
+  .role-tab-label {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 220ms ease;
+  }
+  .role-tab-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .role-tab.active { background: var(--amber); }
+  .role-tab.active .role-tab-dot { background: #FFF4E8; transform: scale(1.4); }
+  .role-tab.active .role-tab-label { color: rgba(255,244,232,0.85); }
+  .role-tab.active .role-tab-sub { color: #FFF4E8; }
+  .role-tab:hover:not(.active) { background: var(--cream); }
+
+  .role-fields { display: contents; }
+  .role-fields.hidden { display: none !important; }
+
+  /* ---------- Language switcher ---------- */
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(255, 244, 232, 0.32);
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.18);
+    backdrop-filter: blur(4px);
+  }
+  .lang-switch button {
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 244, 232, 0.7);
+    transition: color 180ms ease, background 180ms ease;
+  }
+  .lang-switch button + button { border-left: 1px solid rgba(255,244,232,0.18); }
+  .lang-switch button.active { color: #FFF4E8; background: rgba(213, 90, 44, 0.7); }
+  .lang-switch button:hover:not(.active) { color: #FFF4E8; }
+
+  /* ---------- Scroll reveal animations ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal-stagger.in > * { opacity: 1; transform: translateY(0); }
+  .reveal-stagger.in > *:nth-child(1) { transition-delay: 0ms; }
+  .reveal-stagger.in > *:nth-child(2) { transition-delay: 80ms; }
+  .reveal-stagger.in > *:nth-child(3) { transition-delay: 160ms; }
+  .reveal-stagger.in > *:nth-child(4) { transition-delay: 240ms; }
+  .reveal-stagger.in > *:nth-child(5) { transition-delay: 320ms; }
+  .reveal-stagger.in > *:nth-child(6) { transition-delay: 400ms; }
+  .reveal-stagger.in > *:nth-child(7) { transition-delay: 480ms; }
+  .reveal-stagger.in > *:nth-child(8) { transition-delay: 560ms; }
+
+  /* Hero entry animation on load */
+  .hero-inner > * { opacity: 0; transform: translateY(16px); animation: heroIn 1100ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .hero-inner > *:nth-child(1) { animation-delay: 200ms; }
+  .hero-inner > *:nth-child(2) { animation-delay: 380ms; }
+  .hero-inner > *:nth-child(3) { animation-delay: 560ms; }
+  .hero-inner > *:nth-child(4) { animation-delay: 740ms; }
+  @keyframes heroIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Hero parallax + fade-out on scroll */
+  .hero-content { transition: transform 60ms linear; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-stagger > *, .hero-inner > * {
+      opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important;
+    }
+  }
+
+  /* ---------- Role signup modal (legacy, kept hidden) ---------- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 20, 16, 0.55);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    width: min(560px, 100%);
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 48px 48px 44px;
+    transform: translateY(12px);
+    transition: transform 240ms ease;
+    position: relative;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    color: var(--mid);
+    transition: background 180ms ease, color 180ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-close:hover { background: var(--cream); color: var(--ink); }
+  .modal-eyebrow { color: var(--amber); margin-bottom: 14px; display: block; }
+  .modal h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .modal h3 em { font-style: italic; color: var(--amber); }
+  .modal-sub {
+    color: var(--mid);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .modal form { display: flex; flex-direction: column; gap: 22px; }
+  .modal .form-actions { margin-top: 8px; }
+  .modal-success {
+    text-align: left;
+  }
+  .modal-success h3 { margin-bottom: 12px; }
+  .modal-success p { color: var(--mid); font-size: 14.5px; line-height: 1.6; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 64px 0 56px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 48px;
+    align-items: end;
+  }
+  .footer-word {
+    font-family: var(--serif);
+    font-size: 28px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .footer-tag {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--mid);
+  }
+  .footer-col .eyebrow { color: var(--muted); display: block; margin-bottom: 10px; }
+  .footer-col span,
+  .footer-col a { font-size: 14px; color: var(--ink); }
+  .footer-col a { border-bottom: 1px solid transparent; transition: border-color 200ms ease; }
+  .footer-col a:hover { border-color: var(--amber); }
+  .footer-socials {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .footer-socials a {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--ink);
+    transition: border-color 200ms ease, color 200ms ease;
+  }
+  .footer-socials a:hover { border-color: var(--amber); color: var(--amber); }
+  .footer-bottom {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 980px) {
+    .hero-nav { padding: 24px 28px; }
+    .hero-nav .nav-links { display: none; }
+    .hero-inner { width: min(520px, 80vw); padding: 32px 20px; }
+    .cards { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .step:nth-child(2)::after { display: none; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .creators-inner { grid-template-columns: 1fr; gap: 24px; }
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 36px; }
+    .section { padding: 96px 0; }
+    .container { padding: 0 24px; }
+  }
+  @media (max-width: 600px) {
+    .steps { grid-template-columns: 1fr; }
+    .step::after { display: none !important; }
+    .step:not(:first-child) { padding-left: 0; }
+    .hero-inner { width: min(420px, 88vw); padding: 24px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top" data-screen-label="01 Hero">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="assets/train-window.mp4" type="video/mp4" />
+  </video>
+
+  <nav class="hero-nav">
+    <a href="#top" class="wordmark">Influence<em>Match</em></a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <span class="nav-divider"></span>
+      <a href="#contact" data-role="brand" class="nav-entry"><span class="dot"></span>Brand</a>
+      <a href="#contact" data-role="creator" class="nav-entry"><span class="dot"></span>Influencer</a>
+      <span class="nav-divider"></span>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en" class="active">EN</button>
+        <button type="button" data-lang="es">ES</button>
+      </div>
+      <a href="#contact" class="nav-cta">Book a call</a>
+    </div>
+  </nav>
+
+  <div class="hero-content">
+    <div class="hero-inner">
+      <div class="eyebrow hero-eyebrow">Influencer Marketing &nbsp;/&nbsp; <span class="eyebrow-travel">Travel</span></div>
+      <h1>Travel sponsorships, <span style="color: rgb(26, 26, 26);">expertly </span>matched </h1>
+      <p>Short-form sponsored content for the travel category. We connect brands with creators whose audiences actually travel.</p>
+      <a href="#contact" class="hero-cta">
+        Book a call <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT WE DO ============ -->
+<section class="section section-work" id="work" data-screen-label="02 What we do">
+  <div class="work-bleed" aria-hidden="true"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">What we do</span>
+      <h2>Sponsorships placed where viewer <em>intent</em> is highest.</h2>
+      <p>Three categories where the audience–product fit is direct, the creative is visual, and the conversion is meaningful.</p>
+    </div>
+
+    <div class="cards reveal-stagger">
+      <article class="card">
+        <span class="card-num">01</span>
+        <div class="card-rule"></div>
+        <h3>VPN <em>sponsorships</em></h3>
+        <p>Built for creators whose audiences actually need them — long-haul travelers, expats, and digital nomads moving between networks and borders.</p>
+      </article>
+
+      <article class="card">
+        <span class="card-num">02</span>
+        <div class="card-rule"></div>
+        <h3>eSIM &amp; <em>travel SIM</em></h3>
+        <p>Placed into trip-prep content where viewer intent is highest — the moment someone is mapping a route, packing, or booking the first flight.</p>
+      </article>
+
+      <article class="card">
+        <span class="card-num">03</span>
+        <div class="card-rule"></div>
+        <h3>Gear &amp; <em>accessories</em></h3>
+        <p>Bags, tech, comfort. Visually-led product placement that lives inside the shot, not pasted on top of it.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section" id="how" data-screen-label="03 How it works" style="background: var(--cream);">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2>Four steps. Roughly <em>six weeks</em> end-to-end.</h2>
+    </div>
+
+    <div class="steps reveal-stagger">
+      <div class="step">
+        <span class="step-num">— 01</span>
+        <h4>Brief</h4>
+        <p>You tell us your goal, target market, and budget. We respond with a creator shortlist within 72 hours.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">— 02</span>
+        <h4>Source</h4>
+        <p>We negotiate, contract, and onboard the creator. You approve before anything moves forward.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">— 03</span>
+        <h4>Produce</h4>
+        <p>We handle briefs, content review, and revisions. You see the final cut before it goes live.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">— 04</span>
+        <h4>Report</h4>
+        <p>Performance dashboard within 7 days of launch. Reach, watch-through, and attributed conversions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="section about" id="about" data-screen-label="04 About">
+  <div class="container">
+    <div class="about-grid reveal">
+      <div>
+        <span class="eyebrow">About</span>
+        <h2>A small studio for the <em>travel vertical</em>.</h2>
+      </div>
+      <div class="about-body">
+        <p>InfluenceMatch is run by Mara Whitfield. We work with travel-vertical brands across the United States and Europe, and our creator network speaks English, Spanish, and growing.</p>
+        <p>Small team, deliberately. We take on a limited number of campaigns each quarter so every one gets full attention. We've watched too many agencies optimize for volume and lose the craft. We do the opposite.</p>
+
+        <div class="about-meta">
+          <div>
+            <span class="eyebrow">Founded</span>
+            <span>New York, 2023</span>
+          </div>
+          <div>
+            <span class="eyebrow">Markets</span>
+            <span>US · Spain · EU</span>
+          </div>
+          <div>
+            <span class="eyebrow">Capacity</span>
+            <span>~12 campaigns / quarter</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR CREATORS ============ -->
+<section class="creators" data-screen-label="05 For creators">
+  <div class="container">
+    <div class="creators-inner reveal">
+      <span class="eyebrow">For creators</span>
+      <p>If you're a travel creator interested in being added to our roster, we're always meeting new people. No exclusivity, no fees — just first look at deals that match your audience.</p>
+      <a href="#contact" class="creators-link">Apply to roster <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section faq" id="faq" data-screen-label="06 FAQ">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Frequently asked</span>
+      <h2>Things worth <em>knowing</em> first.</h2>
+    </div>
+
+    <div class="faq-list reveal-stagger">
+      <div class="faq-item">
+        <p class="faq-q">What does InfluenceMatch actually do?</p>
+        <p class="faq-a">We're an influencer marketing agency for the travel category. We match travel-vertical brands with creators whose audiences travel, and we produce the short-form sponsored content end-to-end — sourcing, briefing, contracting, review, reporting.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">What kinds of brands do you work with?</p>
+        <p class="faq-a">VPNs, eSIM and travel SIM providers, luggage and travel gear, booking and itinerary tools, and a handful of premium travel-adjacent brands. The common thread is a product the audience actually uses while traveling.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">How do you find the right creators?</p>
+        <p class="faq-a">Audience composition first, vibe second, follower count last. We look at where viewers live, where they travel, language, watch-through, and the kind of content the creator already makes. We've spent two years building the roster — most of the work happens before a brief ever lands.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">We've been burned by influencer marketing before. Why would this be different?</p>
+        <p class="faq-a">Two reasons. We only place into categories where the audience–product fit is direct, so the integration doesn't feel forced. And we cap our campaign count each quarter, which means a senior person is on every brief. No junior account managers, no fire-and-forget.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">How are deals structured?</p>
+        <p class="faq-a">Flat fee per piece of content, with usage rights priced separately if you need them. We share the rate card on the call. No hidden management fees baked into creator pricing.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">What's the timeline from kickoff to live content?</p>
+        <p class="faq-a">Roughly six weeks. Shortlist in 72 hours, contracts in week two, production through weeks three and four, review in week five, live in week six. Faster is possible; we'll tell you up front what it costs in quality.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Do you work outside the US and Europe?</p>
+        <p class="faq-a">Occasionally, on a project basis. The roster is strongest in North America and Western Europe, with a growing Spanish-language pocket. If you're targeting LATAM or APAC, we'll be honest about whether we're the right shop.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">How do we get started?</p>
+        <p class="faq-a">A 30-minute call. Tell us the goal, the market, and the budget — we'll come back within 72 hours with a shortlist and a plan, or tell you we're not the right fit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section contact" id="contact" data-screen-label="07 Contact">
+  <div class="container">
+    <div class="contact-grid reveal">
+      <div class="contact-head">
+        <span class="eyebrow">Contact</span>
+        <h2>Tell us what you're <em>launching</em>.</h2>
+
+        <div class="contact-meta">
+          <div>
+            <span class="eyebrow">Email</span>
+            <a href="mailto:hello@influencematch.co">hello@influencematch.co</a>
+          </div>
+          <div>
+            <span class="eyebrow">Studios</span>
+            <span>New York · Madrid</span>
+          </div>
+          <div>
+            <span class="eyebrow">Hours</span>
+            <span>Mon — Fri · 9:00–18:00 ET</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="role-tabs" role="tablist" aria-label="Who's getting in touch">
+          <button type="button" class="role-tab active" data-tab="brand" role="tab" aria-selected="true">
+            <span class="role-tab-dot"></span>
+            <span class="role-tab-label">For brands</span>
+            <span class="role-tab-sub">Launch a campaign</span>
+          </button>
+          <button type="button" class="role-tab" data-tab="creator" role="tab" aria-selected="false">
+            <span class="role-tab-dot"></span>
+            <span class="role-tab-label">For influencers</span>
+            <span class="role-tab-sub">Apply to roster</span>
+          </button>
+        </div>
+
+        <form class="contact-form" id="contactForm" data-active="brand" novalidate>
+          <div class="field" data-field="name">
+            <label for="f-name">Name</label>
+            <input id="f-name" type="text" name="name" placeholder="Your full name" autocomplete="name" />
+            <div class="field-error" data-error-for="name"></div>
+          </div>
+          <div class="field" data-field="email">
+            <label for="f-email">Email</label>
+            <input id="f-email" type="email" name="email" placeholder="you@company.com" autocomplete="email" />
+            <div class="field-error" data-error-for="email"></div>
+          </div>
+
+          <!-- Brand fields -->
+          <div class="role-fields role-brand-fields">
+            <div class="field" data-field="company">
+              <label for="f-company">Company</label>
+              <input id="f-company" type="text" name="company" placeholder="Brand or agency" autocomplete="organization" />
+              <div class="field-error" data-error-for="company"></div>
+            </div>
+            <div class="field" data-field="brief">
+              <label for="f-brief">What are you trying to launch?</label>
+              <textarea id="f-brief" name="brief" rows="4" placeholder="A few sentences on the goal, market, and timing."></textarea>
+              <div class="field-error" data-error-for="brief"></div>
+            </div>
+          </div>
+
+          <!-- Influencer fields -->
+          <div class="role-fields role-creator-fields hidden">
+            <div class="field" data-field="handle">
+              <label for="f-handle">Primary handle</label>
+              <input id="f-handle" type="text" name="handle" placeholder="@yourhandle" />
+              <div class="field-error" data-error-for="handle"></div>
+            </div>
+            <div class="field" data-field="platform">
+              <label for="f-platform">Main platform &amp; audience size</label>
+              <input id="f-platform" type="text" name="platform" placeholder="YouTube · 240k subs" />
+              <div class="field-error" data-error-for="platform"></div>
+            </div>
+            <div class="field" data-field="audience">
+              <label for="f-audience">A bit about your audience</label>
+              <textarea id="f-audience" name="audience" rows="4" placeholder="Where they live, where they travel, what they watch."></textarea>
+              <div class="field-error" data-error-for="audience"></div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn">Send <span class="arrow">→</span></button>
+            <span class="form-fallback">Or <a href="https://cal.com/influencematch" target="_blank" rel="noopener">book a call directly</a>.</span>
+          </div>
+        </form>
+
+        <div class="success-state hidden" id="contactSuccess">
+          <h3>Thanks — we'll be in <em>touch</em>.</h3>
+          <p>You'll hear from us within one business day. If it's urgent, reply to the confirmation email and it'll route to a partner directly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="08 Footer">
+  <div class="container">
+    <div class="footer-inner reveal">
+      <div>
+        <div class="footer-word">Influence<em style="font-style:italic;">Match</em></div>
+        <div class="footer-tag">Travel-vertical influencer marketing.</div>
+      </div>
+      <div class="footer-col">
+        <span class="eyebrow">Email</span>
+        <a href="mailto:hello@influencematch.co">hello@influencematch.co</a>
+      </div>
+      <div class="footer-col">
+        <span class="eyebrow">Location</span>
+        <span>New York · Madrid</span>
+      </div>
+      <div class="footer-col">
+        <span class="eyebrow">Elsewhere</span>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="10" x2="8" y2="17"/><circle cx="8" cy="7" r="0.6" fill="currentColor"/><path d="M12 17v-4a2.5 2.5 0 0 1 5 0v4"/><line x1="12" y1="10" x2="12" y2="17"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 InfluenceMatch LLC</span>
+      <span>Made for the road.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Contact form: tabbed Brand / Influencer + smooth scroll from nav chips
+  (function() {
+    const form = document.getElementById('contactForm');
+    const success = document.getElementById('contactSuccess');
+    const tabs = document.querySelectorAll('.role-tab');
+    const brandFields = document.querySelector('.role-brand-fields');
+    const creatorFields = document.querySelector('.role-creator-fields');
+    if (!form) return;
+
+    function setTab(role) {
+      form.dataset.active = role;
+      tabs.forEach(t => {
+        const active = t.dataset.tab === role;
+        t.classList.toggle('active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      if (role === 'brand') {
+        brandFields.classList.remove('hidden');
+        creatorFields.classList.add('hidden');
+      } else {
+        brandFields.classList.add('hidden');
+        creatorFields.classList.remove('hidden');
+      }
+      // Reset errors when switching
+      form.querySelectorAll('.field').forEach(f => f.classList.remove('error'));
+      form.querySelectorAll('.field-error').forEach(e => e.textContent = '');
+      // Reset success state if switching
+      success.classList.add('hidden');
+      form.classList.remove('hidden');
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => setTab(t.dataset.tab)));
+
+    // Nav chips: switch tab + smooth-scroll to contact
+    function scrollToContact() {
+      const target = document.getElementById('contact');
+      if (!target) return;
+      const top = target.getBoundingClientRect().top + window.scrollY - 24;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+    document.querySelectorAll('[data-role="brand"]').forEach(el => {
+      el.addEventListener('click', (e) => { e.preventDefault(); setTab('brand'); scrollToContact(); });
+    });
+    document.querySelectorAll('[data-role="creator"]').forEach(el => {
+      el.addEventListener('click', (e) => { e.preventDefault(); setTab('creator'); scrollToContact(); });
+    });
+    document.querySelectorAll('.creators-link').forEach(el => {
+      el.addEventListener('click', (e) => { e.preventDefault(); setTab('creator'); scrollToContact(); });
+    });
+
+    function setError(name, message) {
+      const field = form.querySelector(`[data-field="${name}"]`);
+      const err = form.querySelector(`[data-error-for="${name}"]`);
+      if (!field || !err) return;
+      if (message) { field.classList.add('error'); err.textContent = message; }
+      else { field.classList.remove('error'); err.textContent = ''; }
+    }
+    form.addEventListener('input', (e) => { if (e.target.name) setError(e.target.name, ''); });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const role = form.dataset.active;
+      const data = Object.fromEntries(new FormData(form).entries());
+      let ok = true;
+      if (!data.name || data.name.trim().length < 2) { setError('name', 'Please enter your name.'); ok = false; }
+      if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { setError('email', 'Please enter a valid email.'); ok = false; }
+      if (role === 'brand') {
+        if (!data.company || data.company.trim().length < 2) { setError('company', 'Please add a company.'); ok = false; }
+        if (!data.brief || data.brief.trim().length < 10) { setError('brief', 'A sentence or two helps us prep.'); ok = false; }
+      } else {
+        if (!data.handle || data.handle.trim().length < 2) { setError('handle', 'Add your handle.'); ok = false; }
+        if (!data.platform || data.platform.trim().length < 2) { setError('platform', 'Platform & audience helps.'); ok = false; }
+        if (!data.audience || data.audience.trim().length < 10) { setError('audience', 'A sentence about your audience.'); ok = false; }
+      }
+      if (!ok) return;
+      form.classList.add('hidden');
+      success.classList.remove('hidden');
+    });
+  })();
+
+  // Language switcher (EN / ES)
+  (function() {
+    const I18N = {
+      en: {
+        'nav.work': 'Work', 'nav.about': 'About', 'nav.contact': 'Contact',
+        'nav.brand': 'Brand', 'nav.creator': 'Influencer', 'nav.book': 'Book a call',
+        'tab.brand.label': 'For brands', 'tab.brand.sub': 'Launch a campaign',
+        'tab.creator.label': 'For influencers', 'tab.creator.sub': 'Apply to roster',
+      },
+      es: {
+        'nav.work': 'Trabajo', 'nav.about': 'Sobre', 'nav.contact': 'Contacto',
+        'nav.brand': 'Marca', 'nav.creator': 'Creador', 'nav.book': 'Reservar',
+        'tab.brand.label': 'Para marcas', 'tab.brand.sub': 'Lanzar campaña',
+        'tab.creator.label': 'Para creadores', 'tab.creator.sub': 'Únete al roster',
+      }
+    };
+    // Inject data-i18n attributes once
+    const map = [
+      ['.nav-links a[href="#work"]', 'nav.work'],
+      ['.nav-links a[href="#about"]', 'nav.about'],
+      ['.nav-links a[href="#contact"]:not(.nav-cta):not(.nav-entry)', 'nav.contact'],
+    ];
+    document.querySelectorAll('.lang-switch button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        document.querySelectorAll('.lang-switch button').forEach(b => b.classList.toggle('active', b === btn));
+        const dict = I18N[lang];
+        // Nav links
+        const work = document.querySelector('.nav-links a[href="#work"]'); if (work) work.textContent = dict['nav.work'];
+        const about = document.querySelector('.nav-links a[href="#about"]'); if (about) about.textContent = dict['nav.about'];
+        const navContact = [...document.querySelectorAll('.nav-links a[href="#contact"]')].find(a => !a.classList.contains('nav-cta') && !a.classList.contains('nav-entry'));
+        if (navContact) navContact.textContent = dict['nav.contact'];
+        // Brand / Influencer chips: keep dot, replace text node
+        document.querySelectorAll('.nav-entry').forEach(chip => {
+          const role = chip.dataset.role;
+          const key = role === 'brand' ? 'nav.brand' : 'nav.creator';
+          const dot = chip.querySelector('.dot');
+          chip.innerHTML = '';
+          if (dot) chip.appendChild(dot);
+          chip.appendChild(document.createTextNode(dict[key]));
+        });
+        const cta = document.querySelector('.nav-cta'); if (cta) cta.textContent = dict['nav.book'];
+        // Tabs
+        const bLabel = document.querySelector('.role-tab[data-tab="brand"] .role-tab-label');
+        const bSub = document.querySelector('.role-tab[data-tab="brand"] .role-tab-sub');
+        const cLabel = document.querySelector('.role-tab[data-tab="creator"] .role-tab-label');
+        const cSub = document.querySelector('.role-tab[data-tab="creator"] .role-tab-sub');
+        if (bLabel) bLabel.textContent = dict['tab.brand.label'];
+        if (bSub) bSub.textContent = dict['tab.brand.sub'];
+        if (cLabel) cLabel.textContent = dict['tab.creator.label'];
+        if (cSub) cSub.textContent = dict['tab.creator.sub'];
+        document.documentElement.lang = lang;
+      });
+    });
+  })();
+
+  // Scroll-reveal animations + hero parallax
+  (function() {
+    const targets = document.querySelectorAll('.reveal, .reveal-stagger');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      targets.forEach(t => io.observe(t));
+    } else {
+      targets.forEach(t => t.classList.add('in'));
+    }
+
+    // Hero parallax: subtle drift + fade as user scrolls past
+    const heroContent = document.querySelector('.hero-content');
+    const heroVideo = document.querySelector('.hero video');
+    if (heroContent) {
+      let raf = null;
+      function onScroll() {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          const y = window.scrollY;
+          const vh = window.innerHeight;
+          const t = Math.min(1, y / vh);
+          heroContent.style.transform = `translateY(${y * 0.18}px)`;
+          heroContent.style.opacity = String(1 - t * 1.2);
+          if (heroVideo) heroVideo.style.transform = `translateY(${y * 0.08}px) scale(${1 + t * 0.04})`;
+          raf = null;
+        });
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+  })();
+</script>
+
+<!-- ─────────── Tweaks panel ─────────── -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+
+<div id="tweaks-root"></div>
+
+<script type="text/babel">
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "mood": "tuscan",
+    "voice": "editorial",
+    "atmosphere": "editorial",
+    "theme": "light",
+    "accentCustom": false,
+    "accent": "#D55A2C",
+    "accentStyle": "outline",
+    "heroTreatment": "default",
+    "heroVignette": 0.5,
+    "heroScrim": 0.94,
+    "parallax": 1,
+    "typeScale": 1,
+    "headingWeight": 450,
+    "density": "regular",
+    "containerWidth": 1160,
+    "cardStyle": "default",
+    "cardRadius": 4,
+    "btnRadius": 4,
+    "divider": "soft",
+    "linkStyle": "underline",
+    "revealDistance": 28,
+    "revealDuration": 900,
+    "hoverLift": 2,
+    "grain": 0
+  }/*EDITMODE-END*/;
+
+  // helper: derive deep accent
+  function darken(hex, amt = 0.15) {
+    const n = hex.replace('#', '');
+    const num = parseInt(n.length === 3 ? n.split('').map(c => c + c).join('') : n, 16);
+    let r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+    r = Math.max(0, Math.round(r * (1 - amt)));
+    g = Math.max(0, Math.round(g * (1 - amt)));
+    b = Math.max(0, Math.round(b * (1 - amt)));
+    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+  }
+  function alphaHex(hex, a) {
+    const n = hex.replace('#', '');
+    const full = n.length === 3 ? n.split('').map(c => c + c).join('') : n;
+    return '#' + full + Math.round(a * 255).toString(16).padStart(2, '0');
+  }
+
+  function TweaksApp() {
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+    React.useEffect(() => {
+      const html = document.documentElement;
+      const set = (name, val) => {
+        if (val === null || val === undefined || val === '' || val === 'default') html.removeAttribute(name);
+        else html.setAttribute(name, val);
+      };
+      set('data-mood', t.mood === 'tuscan' ? null : t.mood);
+      set('data-voice', t.voice === 'editorial' ? null : t.voice);
+      set('data-atmosphere', t.atmosphere === 'editorial' ? null : t.atmosphere);
+      set('data-theme', t.theme === 'light' ? null : t.theme);
+      set('data-accent', t.accentStyle === 'solid' ? null : t.accentStyle);
+      set('data-hero', t.heroTreatment === 'default' ? null : t.heroTreatment);
+      set('data-cards', t.cardStyle === 'default' ? null : t.cardStyle);
+      set('data-divider', t.divider === 'soft' ? null : t.divider);
+      set('data-links', t.linkStyle === 'underline' ? null : t.linkStyle);
+      set('data-density', t.density === 'regular' ? null : t.density);
+
+      // CSS vars
+      const r = html.style;
+      if (t.accentCustom) {
+        r.setProperty('--amber', t.accent);
+        r.setProperty('--amber-deep', darken(t.accent, 0.18));
+        r.setProperty('--border', alphaHex(t.accent, 0.16));
+        r.setProperty('--border-strong', alphaHex(t.accent, 0.32));
+      } else {
+        r.removeProperty('--amber');
+        r.removeProperty('--amber-deep');
+        r.removeProperty('--border');
+        r.removeProperty('--border-strong');
+      }
+      r.setProperty('--type-scale', String(t.typeScale));
+      r.setProperty('--heading-weight', String(t.headingWeight));
+      r.setProperty('--card-radius', t.cardRadius + 'px');
+      r.setProperty('--btn-radius', t.btnRadius + 'px');
+      r.setProperty('--container-w', t.containerWidth + 'px');
+      r.setProperty('--hero-vignette', String(t.heroVignette));
+      r.setProperty('--hero-scrim', String(t.heroScrim));
+      r.setProperty('--parallax', String(t.parallax));
+      r.setProperty('--reveal-distance', t.revealDistance + 'px');
+      r.setProperty('--reveal-duration', t.revealDuration + 'ms');
+      r.setProperty('--hover-lift', t.hoverLift + 'px');
+      r.setProperty('--grain', String(t.grain));
+    }, [t]);
+
+    return (
+      <TweaksPanel title="Tweaks">
+        {/* ── Mood ── */}
+        <TweakSection label="Mood" />
+        <TweakRadio
+          label="Palette"
+          value={t.mood}
+          options={[
+            { value: 'tuscan',  label: 'Tuscan' },
+            { value: 'coastal', label: 'Coastal' },
+            { value: 'forest',  label: 'Forest' },
+          ]}
+          onChange={(v) => setTweak('mood', v)}
+        />
+        <TweakRadio
+          label="Theme"
+          value={t.theme}
+          options={[
+            { value: 'light', label: 'Light' },
+            { value: 'dark',  label: 'Dark' },
+          ]}
+          onChange={(v) => setTweak('theme', v)}
+        />
+        <TweakToggle
+          label="Custom accent"
+          value={t.accentCustom}
+          onChange={(v) => setTweak('accentCustom', v)}
+        />
+        {t.accentCustom && (
+          <TweakColor
+            label="Accent color"
+            value={t.accent}
+            onChange={(v) => setTweak('accent', v)}
+          />
+        )}
+        <TweakRadio
+          label="Accent style"
+          value={t.accentStyle}
+          options={[
+            { value: 'solid',    label: 'Solid' },
+            { value: 'outline',  label: 'Outline' },
+            { value: 'gradient', label: 'Gradient' },
+            { value: 'muted',    label: 'Muted' },
+          ]}
+          onChange={(v) => setTweak('accentStyle', v)}
+        />
+
+        {/* ── Type ── */}
+        <TweakSection label="Type" />
+        <TweakRadio
+          label="Voice"
+          value={t.voice}
+          options={[
+            { value: 'editorial',  label: 'Editorial' },
+            { value: 'modern',     label: 'Modern' },
+            { value: 'manuscript', label: 'Manuscript' },
+          ]}
+          onChange={(v) => setTweak('voice', v)}
+        />
+        <TweakSlider
+          label="Type scale"
+          value={t.typeScale}
+          min={0.78} max={1.35} step={0.01}
+          onChange={(v) => setTweak('typeScale', v)}
+        />
+        <TweakSlider
+          label="Heading weight"
+          value={t.headingWeight}
+          min={300} max={800} step={50}
+          onChange={(v) => setTweak('headingWeight', v)}
+        />
+
+        {/* ── Hero ── */}
+        <TweakSection label="Hero" />
+        <TweakRadio
+          label="Treatment"
+          value={t.heroTreatment}
+          options={[
+            { value: 'default',  label: 'Bright' },
+            { value: 'duotone',  label: 'Duotone' },
+            { value: 'vintage',  label: 'Vintage' },
+            { value: 'bw',       label: 'B&W' },
+            { value: 'vibrant',  label: 'Vibrant' },
+            { value: 'frost',    label: 'Frost' },
+          ]}
+          onChange={(v) => setTweak('heroTreatment', v)}
+        />
+        <TweakSlider
+          label="Vignette"
+          value={t.heroVignette}
+          min={0} max={1.2} step={0.05}
+          onChange={(v) => setTweak('heroVignette', v)}
+        />
+        <TweakSlider
+          label="Text scrim"
+          value={t.heroScrim}
+          min={0} max={1} step={0.02}
+          onChange={(v) => setTweak('heroScrim', v)}
+        />
+        <TweakSlider
+          label="Parallax"
+          value={t.parallax}
+          min={0} max={2} step={0.05}
+          onChange={(v) => setTweak('parallax', v)}
+        />
+
+        {/* ── Atmosphere ── */}
+        <TweakSection label="Atmosphere" />
+        <TweakRadio
+          label="Pacing"
+          value={t.atmosphere}
+          options={[
+            { value: 'cinematic', label: 'Cinematic' },
+            { value: 'editorial', label: 'Editorial' },
+            { value: 'flat',      label: 'Flat' },
+          ]}
+          onChange={(v) => setTweak('atmosphere', v)}
+        />
+        <TweakSlider
+          label="Reveal travel"
+          value={t.revealDistance}
+          min={0} max={120} step={2} unit="px"
+          onChange={(v) => setTweak('revealDistance', v)}
+        />
+        <TweakSlider
+          label="Reveal speed"
+          value={t.revealDuration}
+          min={200} max={2000} step={50} unit="ms"
+          onChange={(v) => setTweak('revealDuration', v)}
+        />
+        <TweakSlider
+          label="Grain"
+          value={t.grain}
+          min={0} max={0.5} step={0.02}
+          onChange={(v) => setTweak('grain', v)}
+        />
+
+        {/* ── Layout ── */}
+        <TweakSection label="Layout" />
+        <TweakRadio
+          label="Density"
+          value={t.density}
+          options={[
+            { value: 'compact', label: 'Compact' },
+            { value: 'regular', label: 'Regular' },
+            { value: 'airy',    label: 'Airy' },
+          ]}
+          onChange={(v) => setTweak('density', v)}
+        />
+        <TweakSlider
+          label="Container"
+          value={t.containerWidth}
+          min={960} max={1440} step={20} unit="px"
+          onChange={(v) => setTweak('containerWidth', v)}
+        />
+        <TweakRadio
+          label="Cards"
+          value={t.cardStyle}
+          options={[
+            { value: 'default',  label: 'Lit' },
+            { value: 'bordered', label: 'Bordered' },
+            { value: 'filled',   label: 'Filled' },
+            { value: 'elevated', label: 'Elevated' },
+          ]}
+          onChange={(v) => setTweak('cardStyle', v)}
+        />
+        <TweakSlider
+          label="Card radius"
+          value={t.cardRadius}
+          min={0} max={28} step={1} unit="px"
+          onChange={(v) => setTweak('cardRadius', v)}
+        />
+        <TweakSlider
+          label="Button radius"
+          value={t.btnRadius}
+          min={0} max={28} step={1} unit="px"
+          onChange={(v) => setTweak('btnRadius', v)}
+        />
+        <TweakSlider
+          label="Hover lift"
+          value={t.hoverLift}
+          min={0} max={12} step={1} unit="px"
+          onChange={(v) => setTweak('hoverLift', v)}
+        />
+
+        {/* ── Details ── */}
+        <TweakSection label="Details" />
+        <TweakRadio
+          label="Section divider"
+          value={t.divider}
+          options={[
+            { value: 'soft',     label: 'Soft' },
+            { value: 'rule',     label: 'Rule' },
+            { value: 'ornament', label: 'Ornament' },
+          ]}
+          onChange={(v) => setTweak('divider', v)}
+        />
+        <TweakRadio
+          label="Link hover"
+          value={t.linkStyle}
+          options={[
+            { value: 'underline', label: 'Plain' },
+            { value: 'dotted',    label: 'Dotted' },
+            { value: 'solid',     label: 'Solid' },
+          ]}
+          onChange={(v) => setTweak('linkStyle', v)}
+        />
+      </TweaksPanel>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweaksApp />);
+</script>
+
+</body>
+</html>
